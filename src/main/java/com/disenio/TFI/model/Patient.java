@@ -21,4 +21,7 @@ public class Patient {
     private String address;
     private String location;
     private String phone;
+
+    @OneToMany(mappedBy = "patient")
+    private List<Turn> turns;
 }
