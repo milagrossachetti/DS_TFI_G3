@@ -9,5 +9,4 @@ public class TfiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TfiApplication.class, args);
 	}
-
 }
