@@ -4,10 +4,9 @@ import com.disenio.TFI.model.Patient;
 import com.disenio.TFI.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("patient")
@@ -16,8 +15,12 @@ public class PatientController {
     @Autowired
     PatientService patientService;
     @PostMapping
-    public String createPatient(@RequestBody Patient patient){
-        patientService.createPatient(patient);
-        return "El paciente se guardó con éxito";
+    public Patient createPatient(@RequestBody Patient patient){
+        return patientService.createPatient(patient);
     }
+    @PutMapping("/update/{id}")
+    public void updatePatient(@PathVariable("id") Long id,@RequestBody Patient patient) throws Exception {
+        patientService.updatePatiente(id, patient);
+    }
+
 }

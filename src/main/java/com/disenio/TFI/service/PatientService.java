@@ -5,5 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface PatientService {
-    String createPatient(Patient patient);
+    Patient createPatient(Patient patient);
+    void updatePatiente(Long id, Patient patient) throws Exception;
 }
