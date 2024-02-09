@@ -18,6 +18,6 @@ public class SecretaryController {
     @PostMapping
     public String createSecretary(@RequestBody Secretary secretary){
         secretaryService.createSecretary(secretary);
-        return "La secretaría se guardó con éxito";
+        return "La secretaria se guardó con éxito";
     }
 }

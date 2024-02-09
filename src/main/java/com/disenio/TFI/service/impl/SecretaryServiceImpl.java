@@ -15,6 +15,6 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Override
     public String createSecretary(Secretary secretary) {
         secretaryRepository.save(secretary);
-        return "La secretaría se guardó con éxito";
+        return "La secretaria se guardó con éxito";
     }
 }
