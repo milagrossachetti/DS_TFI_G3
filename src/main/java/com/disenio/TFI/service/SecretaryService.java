@@ -5,5 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface SecretaryService {
-    String createSecretary(Secretary secretary);
+    String createSecretaryAndUser(Secretary secretary);
+    String createSecretary(Long user_id);
 }

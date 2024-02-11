@@ -17,7 +17,6 @@ public class UserController {
     UserService userService;
     @PostMapping
     public String createUser(@RequestBody User user){
-        userService.createUser(user);
-        return "El Usuario se guardó con éxito";
+        return userService.createUser(user);
     }
 }

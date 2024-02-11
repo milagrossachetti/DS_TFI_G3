@@ -1,6 +1,6 @@
 package com.disenio.TFI.service;
 
-import com.disenio.TFI.model.Patient;
+import com.disenio.TFI.model.User;
 import org.springframework.stereotype.Service;
 
 @Service

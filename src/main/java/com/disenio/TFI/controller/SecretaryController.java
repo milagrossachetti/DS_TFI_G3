@@ -9,15 +9,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("secretary")
 @RequiredArgsConstructor
 public class SecretaryController {
     @Autowired
     SecretaryService secretaryService;
-    @PostMapping
-    public String createSecretary(@RequestBody Secretary secretary){
-        secretaryService.createSecretary(secretary);
-        return "La secretaria se guardó con éxito";
+    @PostMapping("/createSecretaryAndUser")
+    public String createSecretaryAndUser(@RequestBody Secretary secretary){
+        return secretaryService.createSecretaryAndUser(secretary);
+    }
+
+    @PostMapping("/createSecretary")
+    public String createSecretary(@RequestBody Map<String, Long> user_id){
+        Long userId = user_id.get("user_id");
+        if(userId == null) return "No se proporcionó un ID de usuario válido";
+        return secretaryService.createSecretary(userId);
     }
 }

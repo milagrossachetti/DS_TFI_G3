@@ -2,7 +2,7 @@ package com.disenio.TFI.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.util.List;
 import java.util.Date;
 
 @Entity
@@ -21,7 +21,4 @@ public class Patient {
     private String address;
     private String location;
     private String phone;
-
-    @OneToMany(mappedBy = "patient")
-    private List<Turn> turns;
 }
