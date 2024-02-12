@@ -11,7 +11,8 @@ import java.util.Date;
 @Getter @Setter @Builder
 public class Patient {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    // @GeneratedValue(strategy = GenerationType.AUTO)
+    // Comente la linea porque el id es el dni
     private Long id;
     private String name;
     private String mail;

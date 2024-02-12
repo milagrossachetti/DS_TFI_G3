@@ -8,7 +8,6 @@ import com.disenio.TFI.service.SecretaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -24,6 +23,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     // el sgte metodo permite crear una secretaria a partir del usuario del id
+    @Override
     public String createSecretary(Long user_id) {
         Optional<User> userOptional = userRepository.findById(user_id);
 
