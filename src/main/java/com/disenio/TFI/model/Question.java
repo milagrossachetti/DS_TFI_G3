@@ -16,9 +16,9 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String text;
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
+    @OneToOne
+    @JoinColumn(name = "form_id")
+    private Form form;
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Answer> answers;
 }

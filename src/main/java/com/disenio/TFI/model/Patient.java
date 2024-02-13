@@ -22,6 +22,7 @@ public class Patient {
     private String address;
     private String location;
     private String phone;
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Question> questions;
+    @OneToOne
+    @JoinColumn(name = "form_id")
+    private Form form;
 }
