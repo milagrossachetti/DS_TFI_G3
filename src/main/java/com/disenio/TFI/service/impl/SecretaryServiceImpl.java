@@ -32,9 +32,7 @@ public class SecretaryServiceImpl implements SecretaryService {
 
         // Si ya existe un Secretary asociado al user_id, retornar un mensaje de error
         Optional<Secretary> existingSecretaryOptional = secretaryRepository.findByUserId(user_id);
-        if (existingSecretaryOptional.isPresent()) {
-            return "Ya existe una secretaria asociado a este usuario";
-        }
+        if (existingSecretaryOptional.isPresent()) return "Ya existe una secretaria asociado a este usuario";
 
         // Si el usuario existe, se crea la secretaria
         User user = userOptional.get();

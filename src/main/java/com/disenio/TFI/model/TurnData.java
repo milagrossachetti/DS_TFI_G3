@@ -12,7 +12,6 @@ import java.util.Date;
 public class TurnData {
     private Date date;
     private String description;
-    private TurnStatus status;
     private Long secretaryId;
     private Long patientId;
 }

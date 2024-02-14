@@ -20,10 +20,10 @@ public class Turn {
     @Enumerated(EnumType.STRING)
     private TurnStatus status;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_secretary_id")
     private Secretary secretary;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_patient_id")
     private Patient patient;
 }

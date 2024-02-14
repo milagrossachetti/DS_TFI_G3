@@ -35,7 +35,7 @@ public class TurnServiceImpl implements TurnService{
         Turn turn = new Turn();
         turn.setDate(turnData.getDate());
         turn.setDescription(turnData.getDescription());
-        turn.setStatus(turnData.getStatus());
+        turn.setStatus(TurnStatus.PENDING);
         turn.setSecretary(secretary);
         turn.setPatient(patient);
         turnRepository.save(turn);
