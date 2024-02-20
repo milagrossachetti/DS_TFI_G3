@@ -1,13 +1,14 @@
 package com.disenio.TFI.service.impl;
 
 import com.disenio.TFI.model.*;
-import com.disenio.TFI.repository.*;
-import com.disenio.TFI.service.*;
+import com.disenio.TFI.repository.PatientRepository;
+import com.disenio.TFI.repository.SecretaryRepository;
+import com.disenio.TFI.repository.TurnRepository;
+import com.disenio.TFI.service.TurnService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @RequiredArgsConstructor

@@ -20,4 +20,16 @@ public class Treatment {
     private Long outstandingBalance;
     private Boolean finished;
     private String observations;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_odontologist_id")
+    private Odontologist odontologist;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_turn_id")
+    private Turn turn;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_patient_id")
+    private Patient patient;
 }
