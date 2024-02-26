@@ -1,5 +1,8 @@
 package com.disenio.TFI.service.impl;
 
+import com.disenio.TFI.exception.OdontologistNotFoundException;
+import com.disenio.TFI.exception.PatientNotFoundException;
+import com.disenio.TFI.exception.TurnNotFoundException;
 import com.disenio.TFI.model.Treatment;
 import com.disenio.TFI.model.Odontologist;
 import com.disenio.TFI.model.Patient;
@@ -28,16 +31,16 @@ public class TreatmentServiceImpl implements TreatmentService{
     private PatientRepository patientRepository;
 
     @Override
-    public String createTreatment(TreatmentData treatmentData) {
+    public Treatment createTreatment(TreatmentData treatmentData) throws OdontologistNotFoundException, TurnNotFoundException, PatientNotFoundException {
         // Busca a la odontóloga y si no existe devuelve un mensaje de error
         Optional<Odontologist> odontologistOptional = odontologistRepository.findById(treatmentData.getOdontologistId());
-        if (!odontologistOptional.isPresent()) return "La odontóloga no existe";
+        if (!odontologistOptional.isPresent()) throw new OdontologistNotFoundException("La odontóloga no existe");
         // Busca el turno
         Optional<Turn> turnOptional = turnRepository.findById(treatmentData.getTurnId());
-        if (!turnOptional.isPresent()) return "El turno no existe";
+        if (!turnOptional.isPresent()) throw new TurnNotFoundException("El turno no existe");
         // Busca al paciente
         Optional<Patient> patientOptional = patientRepository.findById(treatmentData.getPatientId());
-        if (!patientOptional.isPresent()) return "El paciente no existe";
+        if (!patientOptional.isPresent()) throw new PatientNotFoundException("El paciente no existe");
 
         Odontologist odontologist = odontologistOptional.get();
         Turn turn = turnOptional.get();
@@ -56,8 +59,6 @@ public class TreatmentServiceImpl implements TreatmentService{
         treatment.setPatient(patient);
 
         // Guarda la prestación
-        treatmentRepository.save(treatment);
-
-        return "La prestación se guardó con éxito";
+        return treatmentRepository.save(treatment);
     }
 }

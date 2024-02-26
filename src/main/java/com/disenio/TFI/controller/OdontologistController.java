@@ -1,5 +1,8 @@
 package com.disenio.TFI.controller;
 
+import com.disenio.TFI.exception.OdontologistAlreadyExistsException;
+import com.disenio.TFI.exception.SecretaryAlreadyExistsException;
+import com.disenio.TFI.exception.UserNotFoundException;
 import com.disenio.TFI.model.Odontologist;
 import com.disenio.TFI.service.OdontologistService;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +21,13 @@ public class OdontologistController {
     @Autowired
     OdontologistService odontologistService;
     @PostMapping("/createOdontologistAndUser")
-    public String createOdontologistAndUser(@RequestBody Odontologist odontologist){
+    public Odontologist createOdontologistAndUser(@RequestBody Odontologist odontologist){
         return odontologistService.createOdontologistAndUser(odontologist);
     }
 
     @PostMapping("/createOdontologist")
-    public String createOdontologist(@RequestBody Map<String, Long> user_id){
+    public Odontologist createOdontologist(@RequestBody Map<String, Long> user_id) throws UserNotFoundException, OdontologistAlreadyExistsException, SecretaryAlreadyExistsException {
         Long userId = user_id.get("user_id");
-        if(userId == null) return "No se proporcionó un ID de usuario válido";
         return odontologistService.createOdontologist(userId);
     }
 }

@@ -13,8 +13,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Override
-    public String createUser(User user) {
-        userRepository.save(user);
-        return "El usuario se guardó con éxito";
+    public User createUser(User user) {
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al crear el usuario");
+        }
     }
 }

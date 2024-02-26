@@ -1,5 +1,8 @@
 package com.disenio.TFI.controller;
 
+import com.disenio.TFI.exception.PatientNotFoundException;
+import com.disenio.TFI.exception.SecretaryNotFoundException;
+import com.disenio.TFI.model.Turn;
 import com.disenio.TFI.model.TurnData;
 import com.disenio.TFI.service.TurnService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +20,8 @@ public class TurnController {
     TurnService turnService;
 
     @PostMapping
-    public String createTurn(@RequestBody TurnData turnData){
+    public Turn createTurn(@RequestBody TurnData turnData) throws SecretaryNotFoundException, PatientNotFoundException {
         return turnService.createTurn(turnData);
+
     }
 }

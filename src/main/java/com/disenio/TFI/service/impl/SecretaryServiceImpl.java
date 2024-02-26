@@ -1,5 +1,8 @@
 package com.disenio.TFI.service.impl;
 
+import com.disenio.TFI.exception.OdontologistAlreadyExistsException;
+import com.disenio.TFI.exception.SecretaryAlreadyExistsException;
+import com.disenio.TFI.exception.UserNotFoundException;
 import com.disenio.TFI.model.Odontologist;
 import com.disenio.TFI.model.Secretary;
 import com.disenio.TFI.model.User;
@@ -21,32 +24,36 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Autowired
     private OdontologistRepository odontologistRepository;
     @Override
-    public String createSecretaryAndUser(Secretary secretary) {
-        secretaryRepository.save(secretary);
-        return "El usuario y la secretaria se guardaron con éxito";
+    public Secretary createSecretaryAndUser(Secretary secretary) {
+        try {
+            return secretaryRepository.save(secretary);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al crear la secretaria");
+        }
     }
 
     // el sgte metodo permite crear una secretaria a partir del usuario del id
     @Override
-    public String createSecretary(Long user_id) {
+    public Secretary createSecretary(Long user_id) throws UserNotFoundException, OdontologistAlreadyExistsException, SecretaryAlreadyExistsException {
         Optional<User> userOptional = userRepository.findById(user_id);
 
         // Si el usuario no existe, se retorna un mensaje de error
-        if (!userOptional.isPresent()) return "El usuario no existe";
+        if (!userOptional.isPresent()) throw new UserNotFoundException("Usuario no encontrado");
 
         // Si ya existe un Odontologist asociado al user_id, retornar un mensaje de error
         Optional<Odontologist> existingOdontologistOptional = odontologistRepository.findByUserId(user_id);
-        if (existingOdontologistOptional.isPresent()) return "Ya existe una odontóloga asociado a este usuario";
+        if (existingOdontologistOptional.isPresent())
+            throw new OdontologistAlreadyExistsException("Ya existe un odontólogo asociado a este usuario");
 
         // Si ya existe un Secretary asociado al user_id, retornar un mensaje de error
         Optional<Secretary> existingSecretaryOptional = secretaryRepository.findByUserId(user_id);
-        if (existingSecretaryOptional.isPresent()) return "Ya existe una secretaria asociado a este usuario";
+        if (existingSecretaryOptional.isPresent())
+            throw new SecretaryAlreadyExistsException("Ya existe una secretaria asociada a este usuario");
 
         // Si el usuario existe, se crea la secretaria
         User user = userOptional.get();
         Secretary secretary = new Secretary();
         secretary.setUser(user);
-        secretaryRepository.save(secretary);
-        return "La secretaria se guardó con éxito";
+        return secretaryRepository.save(secretary);
     }
 }

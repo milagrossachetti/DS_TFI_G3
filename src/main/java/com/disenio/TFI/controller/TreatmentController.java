@@ -1,5 +1,9 @@
 package com.disenio.TFI.controller;
 
+import com.disenio.TFI.exception.OdontologistNotFoundException;
+import com.disenio.TFI.exception.PatientNotFoundException;
+import com.disenio.TFI.exception.TurnNotFoundException;
+import com.disenio.TFI.model.Treatment;
 import com.disenio.TFI.model.TreatmentData;
 import com.disenio.TFI.service.TreatmentService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +21,7 @@ public class TreatmentController {
     TreatmentService treatmentService;
 
     @PostMapping
-    public String createTreatment(@RequestBody TreatmentData treatmentData){
+    public Treatment createTreatment(@RequestBody TreatmentData treatmentData) throws OdontologistNotFoundException, TurnNotFoundException, PatientNotFoundException {
         return treatmentService.createTreatment(treatmentData);
     }
 }
