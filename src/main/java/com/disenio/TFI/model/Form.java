@@ -15,7 +15,7 @@ public class Form {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "form")
     private List<Question> questions;
     @OneToOne(mappedBy = "form")
     private Patient patient;
