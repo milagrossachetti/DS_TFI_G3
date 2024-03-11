@@ -36,7 +36,7 @@ public class TreatmentServiceImpl implements TreatmentService{
         Optional<Odontologist> odontologistOptional = odontologistRepository.findById(treatmentData.getOdontologistId());
         if (!odontologistOptional.isPresent()) throw new OdontologistNotFoundException("La odontóloga no existe");
         // Busca el turno
-        Optional<Appointment> turnOptional = appointmentRepository.findById(treatmentData.getTurnId());
+        Optional<Appointment> turnOptional = appointmentRepository.findById(treatmentData.getAppointmentId());
         if (!turnOptional.isPresent()) throw new AppointmentNotFoundException("El turno no existe");
         // Busca al paciente
         Optional<Patient> patientOptional = patientRepository.findById(treatmentData.getPatientId());
