@@ -78,8 +78,4 @@ class AppointmentServiceImplTest {
         Date nextDate = calendar.getTime();
         assertThat(nextDate.equals(availableDates.get(0)));
     }
-
-    @Test
-    void submitAppointmentDetails() {
-    }
 }
