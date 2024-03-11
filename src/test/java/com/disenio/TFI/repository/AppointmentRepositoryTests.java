@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AppointmentRepositoryTests {
     @Autowired
     private AppointmentRepository appointmentRepository;
-    Date current, tomorrow, yesterday;
+    Date today, tomorrow, yesterday;
     Patient patient;
     Appointment appointment;
 
@@ -27,7 +27,7 @@ public class AppointmentRepositoryTests {
     void setUp() {
         // Obtengo la fecha actual
         Calendar calendar = Calendar.getInstance();
-        current = calendar.getTime();
+        today = calendar.getTime();
         // Obtengo la fecha de mañana
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         tomorrow = calendar.getTime();
@@ -39,17 +39,17 @@ public class AppointmentRepositoryTests {
         patient.setId(1L);
         // Creo un turno
         appointment = new Appointment();
-        appointment.setDate(current);
+        appointment.setDate(today);
         appointment.setDescription("Consulta");
         appointment.setStatus(AppointmentStatus.PENDING);
         appointment.setPatient(patient);
-        // Guardo el turno
+        // Guardo el turno con fecha de hoy
         appointmentRepository.save(appointment);
     }
 
     @AfterEach
     void tearDown() {
-        current = null;
+        today = null;
         tomorrow = null;
         yesterday = null;
         patient = null;
@@ -57,11 +57,10 @@ public class AppointmentRepositoryTests {
         appointmentRepository.deleteAll();
     }
 
-    // Test case SUCCESS
     @Test
-    public void testFindByDateGreaterThanEqualCurrentDate() {
+    public void testFindByDateGreaterThanEqualTodayDate() {
         // Obtengo los turnos a partir de la fecha actual
-        List<Appointment> appointmentList = appointmentRepository.findByDateGreaterThanEqual(current);
+        List<Appointment> appointmentList = appointmentRepository.findByDateGreaterThanEqual(today);
         // Verifico que la lista tenga un elemento
         assertThat(appointmentList).hasSize(1);
         // Verifico que el turno sea el correcto
@@ -72,7 +71,7 @@ public class AppointmentRepositoryTests {
 
     @Test
     public void testFindByDateGreaterThanEqualYesterday() {
-        // Obtengo los turnos a partir de la fecha de mañana
+        // Obtengo los turnos a partir de la fecha de ayer
         List<Appointment> appointmentList = appointmentRepository.findByDateGreaterThanEqual(yesterday);
         // Verifico que la lista tenga un elemento
         assertThat(appointmentList).hasSize(1);
@@ -82,10 +81,9 @@ public class AppointmentRepositoryTests {
         assertThat(appointmentList.get(0).getPatient()).isEqualTo(patient);
     }
 
-    // Test case FAILURE
     @Test
     public void testFindByDateGreaterThanEqualTomorrow() {
-        // Obtengo los turnos a partir de la fecha de ayer
+        // Obtengo los turnos a partir de la fecha de mañana
         List<Appointment> appointmentList = appointmentRepository.findByDateGreaterThanEqual(tomorrow);
         // Verifico que la lista esté vacía
         assertThat(appointmentList).isEmpty();
