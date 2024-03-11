@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-public class Turn {
+public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -18,11 +18,8 @@ public class Turn {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private TurnStatus status;
+    private AppointmentStatus status;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_secretary_id")
-    private Secretary secretary;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_patient_id")
     private Patient patient;
