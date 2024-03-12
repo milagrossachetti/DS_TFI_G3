@@ -14,8 +14,11 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String text;
-    private boolean chosen;
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
 }

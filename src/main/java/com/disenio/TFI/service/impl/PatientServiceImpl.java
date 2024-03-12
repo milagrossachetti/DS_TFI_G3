@@ -1,22 +1,16 @@
 package com.disenio.TFI.service.impl;
 
+import com.disenio.TFI.exception.PatientIsNullException;
+import com.disenio.TFI.exception.PatientNotFoundException;
 import com.disenio.TFI.model.Answer;
-import com.disenio.TFI.model.Form;
 import com.disenio.TFI.model.Patient;
-import com.disenio.TFI.model.Question;
-import com.disenio.TFI.model.mapper.AnswerMapper;
-import com.disenio.TFI.model.mapper.QuestionMapper;
-import com.disenio.TFI.model.request.QuestionRequest;
 import com.disenio.TFI.repository.AnswerRepository;
-import com.disenio.TFI.repository.FormRepository;
 import com.disenio.TFI.repository.PatientRepository;
-import com.disenio.TFI.repository.QuestionRepository;
 import com.disenio.TFI.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,64 +20,68 @@ public class PatientServiceImpl implements PatientService {
     private PatientRepository patientRepository;
     @Autowired
     private AnswerRepository answerRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
-    private FormRepository formRepository;
-    @Autowired
-    private AnswerMapper answerMapper;
-    @Autowired
-    private QuestionMapper questionMapper;
-
     @Override
-    public Patient createPatient(Patient patient) {
-        try{
-            Form form = new Form();
-            formRepository.save(form);
-            patient.setForm(form);
-            return patientRepository.save(patient);
-        } catch (Exception e){
-            throw new RuntimeException(e);
+    public Patient createPatient(Patient patient) throws PatientIsNullException {
+        //crear método para crear respuesta y asignarlo al paciente
+        if(isNull(patient)){
+            throw new PatientIsNullException("Los atributos no pueden ser nulos");
         }
+
+        ///ya recibo los objetos, no es necesario que los cree
+        Patient entityPatient = new Patient(
+                patient.getId(),
+                patient.getName(),
+                patient.getMail(),
+                patient.getSex(),
+                patient.getAge(),
+                patient.getBirthday(),
+                patient.getAddress(),
+                patient.getLocation(),
+                patient.getPhone(),
+                patient.getAnswers()
+        );
+        List<Answer> listAnswers = entityPatient.createListAnswer(patient.getAnswers());
+        for (Answer a: listAnswers) {
+            a.setPatient(entityPatient);
+        }
+        return patientRepository.save(entityPatient);
+    }
+
+   //hacerlo en Patient y lanzar la excepcion allí
+    public boolean isNull(Patient patient){
+        boolean isNull = false;
+        if (patient.getName().isEmpty() || patient.getMail().isEmpty() || patient.getSex().isEmpty() || patient.getBirthday()== null || patient.getAddress().isEmpty() || patient.getLocation().isEmpty() || patient.getPhone().isEmpty() || patient.getAnswers().isEmpty()){
+            isNull = true;
+        }
+        return isNull;
    }
-
     @Override
-    public void updatePatiente(Long id, Patient patient) throws Exception {
-        try{
-            Patient patient1 = patientRepository.getById(id);
-            patient1.setName(patient.getName());
-            patient1.setMail(patient.getMail());
-            patient1.setAge(patient.getAge());
-            patient1.setBirthday(patient.getBirthday());
-            patient1.setAddress(patient.getAddress());
-            patient1.setLocation(patient.getLocation());
-            patient1.setPhone(patient.getPhone());
-            patientRepository.save(patient1);
-        }catch (Exception e){
-            throw new Exception("No se encontró un paciente con ese id");
+    public void updatePatient(Long id, Patient patient) throws Exception {
+        if (patientRepository.getById(id) == null){
+            throw new PatientNotFoundException("El paciente no existe");
         }
+        if(isNull(patient)){
+            throw new PatientIsNullException("Los atributos no pueden ser nulos");
+        }
+        Patient updatedPatient = setValues(patient, id);
+        List<Answer> answers = updatedPatient.updateListAnswer(answerRepository.findByPatientId(id), patient.getAnswers());
+        for (Answer a: answers) {
+            a.setPatient(updatedPatient);
+        }
+        patientRepository.save(updatedPatient);
     }
 
-    @Override
-    public void answerQuestion(QuestionRequest questionRequest) {
-        Question questionEntity = questionMapper.requestToQuestion(questionRequest);
-        Form form = formRepository.getById(questionRequest.getForm_id());
-        if (isFormValid(form, questionEntity)){
-            Question existingQuestion  = questionRepository.getById(questionEntity.getId());
-            existingQuestion.setForm(form);
-            questionRepository.save(existingQuestion);
-            Answer answer = answerMapper.requestToAnswer(questionRequest.getAnswer());
-            answer.setQuestion(questionEntity);
-            answerRepository.save(answer);
-        }
-    }
-
-    private boolean isFormValid(Form form, Question questionEntity) {
-        boolean isValid = false;
-        if (formRepository.existsById(form.getId()) && questionRepository.existsById(questionEntity.getId())){
-            System.out.println("entró al if");
-            isValid=true;
-        }
-        return isValid;
+    public Patient setValues(Patient patient, Long id){
+        Patient existingPatient = patientRepository.getById(id);
+        existingPatient.setName(patient.getName());
+        existingPatient.setMail(patient.getMail());
+        existingPatient.setSex(patient.getSex());
+        existingPatient.setAge(patient.getAge());
+        existingPatient.setBirthday(patient.getBirthday());
+        existingPatient.setAddress(patient.getAddress());
+        existingPatient.setLocation(patient.getLocation());
+        existingPatient.setPhone(patient.getPhone());
+        existingPatient.setAnswers(patient.getAnswers());
+        return existingPatient;
     }
 }

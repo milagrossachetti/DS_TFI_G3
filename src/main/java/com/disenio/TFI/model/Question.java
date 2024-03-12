@@ -1,7 +1,5 @@
 package com.disenio.TFI.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,9 +16,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String text;
-    @ManyToOne
-    @JoinColumn(name = "form_id")
-    private Form form;
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private boolean chosen; //determina si la pregunta es booleana
+    @OneToMany(mappedBy = "question")
     private List<Answer> answers;
 }
