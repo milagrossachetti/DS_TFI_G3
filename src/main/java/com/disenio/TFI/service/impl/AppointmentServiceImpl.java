@@ -16,8 +16,13 @@ import java.util.*;
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
-    @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, PatientRepository patientRepository) {
+        this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+    }
 
     @Override
     public Appointment createAppointment(AppointmentData appointmentData) throws PatientNotFoundException {
