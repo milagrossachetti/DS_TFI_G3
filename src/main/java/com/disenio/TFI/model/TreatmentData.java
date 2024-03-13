@@ -17,6 +17,6 @@ public class TreatmentData {
     private Boolean finished;
     private String observations;
     private Long odontologistId;
-    private Long turnId;
+    private Long appointmentId;
     private Long patientId;
 }

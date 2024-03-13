@@ -2,14 +2,14 @@ package com.disenio.TFI.service.impl;
 
 import com.disenio.TFI.exception.OdontologistNotFoundException;
 import com.disenio.TFI.exception.PatientNotFoundException;
-import com.disenio.TFI.exception.TurnNotFoundException;
+import com.disenio.TFI.exception.AppointmentNotFoundException;
 import com.disenio.TFI.model.Treatment;
 import com.disenio.TFI.model.Odontologist;
 import com.disenio.TFI.model.Patient;
-import com.disenio.TFI.model.Turn;
+import com.disenio.TFI.model.Appointment;
 import com.disenio.TFI.repository.OdontologistRepository;
 import com.disenio.TFI.repository.PatientRepository;
-import com.disenio.TFI.repository.TurnRepository;
+import com.disenio.TFI.repository.AppointmentRepository;
 import com.disenio.TFI.service.TreatmentService;
 import com.disenio.TFI.model.TreatmentData;
 import com.disenio.TFI.repository.TreatmentRepository;
@@ -26,24 +26,24 @@ public class TreatmentServiceImpl implements TreatmentService{
     @Autowired
     private OdontologistRepository odontologistRepository;
     @Autowired
-    private TurnRepository turnRepository;
+    private AppointmentRepository appointmentRepository;
     @Autowired
     private PatientRepository patientRepository;
 
     @Override
-    public Treatment createTreatment(TreatmentData treatmentData) throws OdontologistNotFoundException, TurnNotFoundException, PatientNotFoundException {
+    public Treatment createTreatment(TreatmentData treatmentData) throws OdontologistNotFoundException, AppointmentNotFoundException, PatientNotFoundException {
         // Busca a la odontóloga y si no existe devuelve un mensaje de error
         Optional<Odontologist> odontologistOptional = odontologistRepository.findById(treatmentData.getOdontologistId());
         if (!odontologistOptional.isPresent()) throw new OdontologistNotFoundException("La odontóloga no existe");
         // Busca el turno
-        Optional<Turn> turnOptional = turnRepository.findById(treatmentData.getTurnId());
-        if (!turnOptional.isPresent()) throw new TurnNotFoundException("El turno no existe");
+        Optional<Appointment> turnOptional = appointmentRepository.findById(treatmentData.getAppointmentId());
+        if (!turnOptional.isPresent()) throw new AppointmentNotFoundException("El turno no existe");
         // Busca al paciente
         Optional<Patient> patientOptional = patientRepository.findById(treatmentData.getPatientId());
         if (!patientOptional.isPresent()) throw new PatientNotFoundException("El paciente no existe");
 
         Odontologist odontologist = odontologistOptional.get();
-        Turn turn = turnOptional.get();
+        Appointment appointment = turnOptional.get();
         Patient patient = patientOptional.get();
 
         // Crea la prestación
@@ -55,7 +55,7 @@ public class TreatmentServiceImpl implements TreatmentService{
         treatment.setFinished(treatmentData.getFinished());
         treatment.setObservations(treatmentData.getObservations());
         treatment.setOdontologist(odontologist);
-        treatment.setTurn(turn);
+        treatment.setAppointment(appointment);
         treatment.setPatient(patient);
 
         // Guarda la prestación

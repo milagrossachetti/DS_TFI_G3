@@ -1,7 +1,6 @@
 package com.disenio.TFI.exception;
 
 import com.disenio.TFI.exception.dto.ErrorMessage;
-import com.disenio.TFI.model.Odontologist;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -53,9 +52,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
-    @ExceptionHandler(TurnNotFoundException.class)
+    @ExceptionHandler(AppointmentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorMessage> turnNotFoundException(TurnNotFoundException exception) {
+    public ResponseEntity<ErrorMessage> appointmentNotFoundException(AppointmentNotFoundException exception) {
         ErrorMessage message = new ErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
@@ -65,5 +64,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<ErrorMessage> patientIsNullException(PatientIsNullException exception){
         ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
+    @ExceptionHandler(InvalidDateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> invalidDateException(InvalidDateException exception) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 }

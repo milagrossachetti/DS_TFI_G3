@@ -26,8 +26,8 @@ public class Treatment {
     private Odontologist odontologist;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_turn_id")
-    private Turn turn;
+    @JoinColumn(name = "fk_appointment_id")
+    private Appointment appointment;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_patient_id")

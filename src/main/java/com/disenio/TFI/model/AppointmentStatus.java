@@ -1,5 +1,5 @@
 package com.disenio.TFI.model;
 
-public enum TurnStatus {
+public enum AppointmentStatus {
     PENDING, CONFIRMED, CANCELLED
 }

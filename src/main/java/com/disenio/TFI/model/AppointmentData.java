@@ -8,10 +8,9 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-// TurnData es solo una clase auxiliar para mantener un solo parametro en el metodo createTurn de TurnService
-public class TurnData {
+// AppointmentData es solo una clase auxiliar para mantener un solo parametro en el metodo createAppointment de AppointmentService
+public class AppointmentData {
     private Date date;
     private String description;
-    private Long secretaryId;
     private Long patientId;
 }
