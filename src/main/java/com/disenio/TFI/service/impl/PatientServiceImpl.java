@@ -20,49 +20,27 @@ public class PatientServiceImpl implements PatientService {
     private PatientRepository patientRepository;
     @Autowired
     private AnswerRepository answerRepository;
-    @Override
-    public Patient createPatient(Patient patient) throws PatientIsNullException {
-        //crear método para crear respuesta y asignarlo al paciente
-        if(isNull(patient)){
-            throw new PatientIsNullException("Los atributos no pueden ser nulos");
-        }
-
-        ///ya recibo los objetos, no es necesario que los cree
-        Patient entityPatient = new Patient(
-                patient.getId(),
-                patient.getName(),
-                patient.getMail(),
-                patient.getSex(),
-                patient.getAge(),
-                patient.getBirthday(),
-                patient.getAddress(),
-                patient.getLocation(),
-                patient.getPhone(),
-                patient.getAnswers()
-        );
-        List<Answer> listAnswers = entityPatient.createListAnswer(patient.getAnswers());
-        for (Answer a: listAnswers) {
-            a.setPatient(entityPatient);
-        }
-        return patientRepository.save(entityPatient);
+    public PatientServiceImpl(PatientRepository patientRepository, AnswerRepository answerRepository) {
+        this.patientRepository = patientRepository;
+        this.answerRepository = answerRepository;
     }
 
-   //hacerlo en Patient y lanzar la excepcion allí
-    public boolean isNull(Patient patient){
-        boolean isNull = false;
-        if (patient.getName().isEmpty() || patient.getMail().isEmpty() || patient.getSex().isEmpty() || patient.getBirthday()== null || patient.getAddress().isEmpty() || patient.getLocation().isEmpty() || patient.getPhone().isEmpty() || patient.getAnswers().isEmpty()){
-            isNull = true;
+    @Override
+    public Patient createPatient(Patient patient) throws PatientIsNullException {
+        patient.isNull(patient);
+        List<Answer> answers = patient.getAnswers();
+        for (Answer a: answers) {
+            a.setPatient(patient);
         }
-        return isNull;
-   }
+        return patientRepository.save(patient);
+    }
+
     @Override
     public void updatePatient(Long id, Patient patient) throws Exception {
         if (patientRepository.getById(id) == null){
             throw new PatientNotFoundException("El paciente no existe");
         }
-        if(isNull(patient)){
-            throw new PatientIsNullException("Los atributos no pueden ser nulos");
-        }
+        patient.isNull(patient);
         Patient updatedPatient = setValues(patient, id);
         List<Answer> answers = updatedPatient.updateListAnswer(answerRepository.findByPatientId(id), patient.getAnswers());
         for (Answer a: answers) {

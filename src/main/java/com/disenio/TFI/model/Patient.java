@@ -1,5 +1,6 @@
 package com.disenio.TFI.model;
 
+import com.disenio.TFI.exception.PatientIsNullException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,16 +24,13 @@ public class Patient {
     private String address;
     private String location;
     private String phone;
-    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<Answer> answers;
-
-    //patrón creador para la lista de respuestas, y poblar esa lista con los valores correspondientes.
-    public List<Answer> createListAnswer(List<Answer> answer) {
-        answers = new ArrayList<Answer>();
-        answers.addAll(answer);
-        return answers;
+    public void isNull(Patient patient) throws PatientIsNullException {
+        if (patient.getName().isEmpty() || patient.getMail().isEmpty() || patient.getSex().isEmpty() || patient.getBirthday()== null || patient.getAddress().isEmpty() || patient.getLocation().isEmpty() || patient.getPhone().isEmpty() || patient.getAnswers().isEmpty()){
+            throw new PatientIsNullException("Los atributos no pueden ser nulos");
+        }
     }
-
     public List<Answer> updateListAnswer(List<Answer> oldAnswers, List<Answer> updatedAnswers){
         answers = oldAnswers;
         for (Answer a: updatedAnswers) {

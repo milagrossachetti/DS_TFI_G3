@@ -4,6 +4,7 @@ import com.disenio.TFI.exception.PatientIsNullException;
 import com.disenio.TFI.model.Answer;
 import com.disenio.TFI.model.Patient;
 import com.disenio.TFI.model.Question;
+import com.disenio.TFI.repository.AnswerRepository;
 import com.disenio.TFI.repository.PatientRepository;
 import com.disenio.TFI.service.PatientService;
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +30,8 @@ public class PatientServiceImplTest {
     private PatientRepository patientRepository;
     @Mock
     private PatientService patientService;
+    @Mock
+    private AnswerRepository answerRepository;
     AutoCloseable autoCloseable;
     Patient patient;
     Question question;
@@ -36,8 +39,8 @@ public class PatientServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
-        patientService = new PatientServiceImpl();
+        autoCloseable = MockitoAnnotations.openMocks(this);
+        patientService = new PatientServiceImpl(patientRepository,answerRepository);
         question = new Question(1L, "¿Cómo estás?", false, answers);
         Answer answer = new Answer(1L, "Bien", question, patient);
         answers.add(answer);
@@ -51,11 +54,8 @@ public class PatientServiceImplTest {
 
     @Test
     public void givenPatientToCreateWeExpectPatientCreated() throws PatientIsNullException {
-        //mock(Patient.class);
         mock(PatientRepository.class);
         when(patientRepository.save(patient)).thenReturn(patient);
         assertThat(patientService.createPatient(patient)).isEqualTo(patient);
-
     }
-
 }
