@@ -13,23 +13,20 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("appointment")
+@RequestMapping("appointments")
 @RequiredArgsConstructor
 public class AppointmentController {
     @Autowired
     AppointmentService appointmentService;
 
+    @GetMapping("available-dates")
+    public List<Date> getAvailableDates(@RequestParam(name = "duration", required = true) long duration,
+                                        @RequestParam(name = "days", required = true) Integer days) {
+        return appointmentService.getAvailableDates(duration, days);
+    }
+
+
     @PostMapping
-    public Appointment createAppointment(@RequestBody AppointmentData appointmentData) throws PatientNotFoundException {
-        return appointmentService.createAppointment(appointmentData);
-    }
-
-    @GetMapping("getAvailableDates")
-    public List<Date> getAvailableDates() {
-        return appointmentService.getAvailableDates();
-    }
-
-    @PostMapping("postAppointment")
     public Appointment submitAppointmentDetails(@RequestBody AppointmentData appointmentData) throws PatientNotFoundException, InvalidDateException {
         return appointmentService.submitAppointmentDetails(appointmentData);
     }

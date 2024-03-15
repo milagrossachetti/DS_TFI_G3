@@ -13,4 +13,5 @@ public class AppointmentData {
     private Date date;
     private String description;
     private Long patientId;
+    private Long duration;
 }

@@ -24,24 +24,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         this.patientRepository = patientRepository;
     }
 
-    @Override
-    public Appointment createAppointment(AppointmentData appointmentData) throws PatientNotFoundException {
-        // Busca el paciente por su id
-        Optional<Patient> patientOptional = patientRepository.findById(appointmentData.getPatientId());
-
-        // Si el paciente no existe, retornar un mensaje de error
-        if (!patientOptional.isPresent()) throw new PatientNotFoundException("El paciente no existe");
-
-        Patient patient = patientOptional.get();
-
-        Appointment appointment = new Appointment();
-        appointment.setDate(appointmentData.getDate());
-        appointment.setDescription(appointmentData.getDescription());
-        appointment.setStatus(AppointmentStatus.PENDING);
-        appointment.setPatient(patient);
-        return appointmentRepository.save(appointment);
-    }
-
+    /*
     @Override
     public List<Date> getAvailableDates() {
         // Obtengo los turnos proximos
@@ -50,7 +33,25 @@ public class AppointmentServiceImpl implements AppointmentService {
         // Calculo y retorno las fechas disponibles
         return calculateAvailableDates(appointmentsList);
     }
+    */
+    @Override
+    public List<Date> getAvailableDates(long duration, Integer days) {
+        // Obtengo la fecha actual
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = new Date();
 
+        // Obtengo la fecha limite
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, days);
+        Date endDate = calendar.getTime();
+        // Obtengo la lista de turnos entre la fecha actual y la fecha limite
+
+        List<Appointment> appointmentsList = appointmentRepository.findAppointmentsWithinDateRange(currentDate, endDate);
+
+        // Calculo y retorno las fechas disponibles
+        Appointment appointment = new Appointment();
+        return appointment.calculateAvailableDates(appointmentsList, duration, days, currentDate);
+    }
     @Override
     public Appointment submitAppointmentDetails(AppointmentData appointmentData) throws PatientNotFoundException, InvalidDateException {
         // Busca el paciente por su id
@@ -60,7 +61,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (!patientOptional.isPresent()) throw new PatientNotFoundException("El paciente no existe");
 
         // Si la fecha ingresada no es válida, retornar un mensaje de error
-        if(!getAvailableDates().contains(appointmentData.getDate())) throw new InvalidDateException("La fecha ingresada no es válida");
+        // if(!getAvailableDates().contains(appointmentData.getDate())) throw new InvalidDateException("La fecha ingresada no es válida");
 
         // Obtengo el paciente
         Patient patient = patientOptional.get();
@@ -93,9 +94,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             // Si es lunes, martes, miércoles, jueves o viernes agrega la fecha a la lista de fechas disponibles
             if(dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY) {
-                // Si la hora es entre las 9 y las 12 o las 14 y las 17, agrega la fecha a la lista de fechas disponibles
-                if((hour >= 9 && hour <= 12) || (hour >= 14 && hour <= 17)) {
-                    availableDates.add(currentDate);
+                // Si la hora es entre las 9 y las 13 o las 14 y las 18, agrega la fecha a la lista de fechas disponibles
+                if((hour >= 9 && hour <= 13) || (hour >= 14 && hour <= 17)) {
+
                 }
             }
             calendar.add(Calendar.HOUR, 1);

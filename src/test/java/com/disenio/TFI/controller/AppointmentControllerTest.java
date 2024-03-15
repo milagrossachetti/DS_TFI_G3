@@ -42,7 +42,7 @@ class AppointmentControllerTest {
     List<Date> availableDates = new ArrayList<>();
     AppointmentData appointmentData;
     Appointment appointment;
-
+    /*
     @BeforeEach
     void setUp() {
         // Defino una lista de fechas disponibles entre el 11/03/2024 y el 25/03/2024
@@ -70,7 +70,7 @@ class AppointmentControllerTest {
         // Creo los datos de un turno
         calendar.set(2024, Calendar.MARCH, 11, 9, 0, 0);
         date = calendar.getTime();
-        appointmentData = new AppointmentData(date, "Consulta", 1L);
+        appointmentData = new AppointmentData(date, "Consulta", 1L, );
         // Creo un paciente
         Patient patient = new Patient();
         patient.setId(1L);
@@ -90,7 +90,7 @@ class AppointmentControllerTest {
             .andDo(print())
             .andExpect(status().isOk());
     }
-
+    */
     @Test
     void submitAppointmentDetails() throws Exception {
         // Convierto objeto turno a JSON

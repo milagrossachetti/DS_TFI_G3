@@ -12,9 +12,6 @@ import java.util.List;
 
 @Service
 public interface AppointmentService {
-    Appointment createAppointment(AppointmentData appointmentData) throws PatientNotFoundException;
-
-    List<Date> getAvailableDates();
-
+    List<Date> getAvailableDates(long duration, Integer days);
     Appointment submitAppointmentDetails(AppointmentData appointmentData) throws PatientNotFoundException, InvalidDateException;
 }
