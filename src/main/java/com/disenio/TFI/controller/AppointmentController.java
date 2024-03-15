@@ -1,6 +1,8 @@
 package com.disenio.TFI.controller;
 
+import com.disenio.TFI.exception.InvalidAppointmentDurationException;
 import com.disenio.TFI.exception.InvalidDateException;
+import com.disenio.TFI.exception.InvalidNumberOfDaysException;
 import com.disenio.TFI.exception.PatientNotFoundException;
 import com.disenio.TFI.model.Appointment;
 import com.disenio.TFI.model.AppointmentData;
@@ -20,8 +22,8 @@ public class AppointmentController {
     AppointmentService appointmentService;
 
     @GetMapping("available-dates")
-    public List<Date> getAvailableDates(@RequestParam(name = "duration", required = true) long duration,
-                                        @RequestParam(name = "days", required = true) Integer days) {
+    public List<Date> getAvailableDates(@RequestParam(name = "duration", required = true) int duration,
+                                        @RequestParam(name = "days", required = true) Integer days) throws InvalidNumberOfDaysException, InvalidAppointmentDurationException {
         return appointmentService.getAvailableDates(duration, days);
     }
 

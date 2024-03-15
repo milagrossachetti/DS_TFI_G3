@@ -1,8 +1,11 @@
 package com.disenio.TFI.model;
 
+import com.disenio.TFI.exception.InvalidAppointmentDurationException;
+import com.disenio.TFI.exception.InvalidNumberOfDaysException;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,7 +32,17 @@ public class Appointment {
     @JoinColumn(name = "fk_patient_id")
     private Patient patient;
 
-    public List<Date> calculateAvailableDates(List<Appointment> appointmentList, long duration, Integer days, Date currentDate) {
+    public void validateDays(int days) throws InvalidNumberOfDaysException {
+        if (days < 1 || days > 180) {
+            throw new InvalidNumberOfDaysException("El rango de días debe ser entre 1 y 180");
+        }
+    }
+
+    public void validateDuration(int duration) throws InvalidAppointmentDurationException {
+        if (duration % 15 != 0 || duration < 15) throw new InvalidAppointmentDurationException("La duración debe ser múltiplo de 15 e igual o mayor a 15");
+    }
+
+    public List<Date> calculateAvailableDates(List<Appointment> appointmentList, long duration, int days, Date currentDate) {
         // "Redondeo la hora de la fecha actual" // Ejemplos: 10:12 -> 10:15, 10:32 -> 10:45, 10:47 -> 11:00
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currentDate);

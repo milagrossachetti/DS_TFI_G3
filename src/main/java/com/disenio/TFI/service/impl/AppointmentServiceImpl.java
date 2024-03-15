@@ -1,6 +1,8 @@
 package com.disenio.TFI.service.impl;
 
+import com.disenio.TFI.exception.InvalidAppointmentDurationException;
 import com.disenio.TFI.exception.InvalidDateException;
+import com.disenio.TFI.exception.InvalidNumberOfDaysException;
 import com.disenio.TFI.exception.PatientNotFoundException;
 import com.disenio.TFI.model.*;
 import com.disenio.TFI.repository.PatientRepository;
@@ -35,7 +37,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
     */
     @Override
-    public List<Date> getAvailableDates(long duration, Integer days) {
+    public List<Date> getAvailableDates(int duration, int days) throws InvalidNumberOfDaysException, InvalidAppointmentDurationException {
+        // Valido que el número de días sea válido
+        Appointment appointment = new Appointment();
+        appointment.validateDays(days);
+
+        // Valido que la duración sea válida
+        appointment.validateDuration(duration);
+
         // Obtengo la fecha actual
         Calendar calendar = Calendar.getInstance();
         Date currentDate = new Date();
@@ -49,7 +58,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<Appointment> appointmentsList = appointmentRepository.findAppointmentsWithinDateRange(currentDate, endDate);
 
         // Calculo y retorno las fechas disponibles
-        Appointment appointment = new Appointment();
         return appointment.calculateAvailableDates(appointmentsList, duration, days, currentDate);
     }
     @Override
