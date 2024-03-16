@@ -19,73 +19,76 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AppointmentRepositoryTests {
     @Autowired
     private AppointmentRepository appointmentRepository;
-    Date today, tomorrow, yesterday;
-    Patient patient;
     Appointment appointment;
+    Date currentDate;
+
 
     @BeforeEach
     void setUp() {
         // Obtengo la fecha actual
         Calendar calendar = Calendar.getInstance();
-        today = calendar.getTime();
-        // Obtengo la fecha de mañana
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        tomorrow = calendar.getTime();
-        // Obtengo la fecha de ayer
-        calendar.add(Calendar.DAY_OF_YEAR, -2);
-        yesterday = calendar.getTime();
+        currentDate = calendar.getTime();
+
+        // Obtengo la primera fecha dos días después de la fecha actual
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date appointmentDate = calendar.getTime();
+
         // Creo un paciente
-        patient = new Patient();
+        Patient patient = new Patient();
         patient.setId(1L);
+
         // Creo un turno
-        appointment = new Appointment();
-        appointment.setDate(today);
-        appointment.setDescription("Consulta");
-        appointment.setStatus(AppointmentStatus.PENDING);
-        appointment.setPatient(patient);
-        // Guardo el turno con fecha de hoy
+        appointment = new Appointment(1L, appointmentDate, "Consulta", 30, AppointmentStatus.PENDING, patient);
+
+        // Guardo el turno
         appointmentRepository.save(appointment);
     }
 
     @AfterEach
     void tearDown() {
-        today = null;
-        tomorrow = null;
-        yesterday = null;
-        patient = null;
         appointment = null;
         appointmentRepository.deleteAll();
     }
 
     @Test
-    public void testFindByDateGreaterThanEqualTodayDate() {
-        // Obtengo los turnos a partir de la fecha actual
-        List<Appointment> appointmentList = appointmentRepository.findByDateGreaterThanEqual(today);
-        // Verifico que la lista tenga un elemento
-        assertThat(appointmentList).hasSize(1);
-        // Verifico que el turno sea el correcto
-        assertThat(appointmentList.get(0)).isEqualTo(appointment);
-        // Verifico que el paciente sea el correcto
-        assertThat(appointmentList.get(0).getPatient()).isEqualTo(patient);
-    }
+    void testFindAppointmentsWithinDateRangeWithNoAppointments() {
+        // Obtengo la fecha del día de mañana
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date endDate = calendar.getTime();
 
-    @Test
-    public void testFindByDateGreaterThanEqualYesterday() {
-        // Obtengo los turnos a partir de la fecha de ayer
-        List<Appointment> appointmentList = appointmentRepository.findByDateGreaterThanEqual(yesterday);
-        // Verifico que la lista tenga un elemento
-        assertThat(appointmentList).hasSize(1);
-        // Verifico que el turno sea el correcto
-        assertThat(appointmentList.get(0)).isEqualTo(appointment);
-        // Verifico que el paciente sea el correcto
-        assertThat(appointmentList.get(0).getPatient()).isEqualTo(patient);
-    }
+        // Obtengo los turnos entre la fecha actual y la fecha de mañana
+        List<Appointment> appointmentList = appointmentRepository.findAppointmentsWithinDateRange(currentDate, endDate);
 
-    @Test
-    public void testFindByDateGreaterThanEqualTomorrow() {
-        // Obtengo los turnos a partir de la fecha de mañana
-        List<Appointment> appointmentList = appointmentRepository.findByDateGreaterThanEqual(tomorrow);
         // Verifico que la lista esté vacía
         assertThat(appointmentList).isEmpty();
+    }
+
+    @Test
+    void testFindAppointmentsWithinDateRangeWithOneAppointment() {
+        // Obtengo la fecha dentro de 3 días
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, 3);
+        Date endDate = calendar.getTime();
+
+        // Obtengo los turnos entre la fecha actual y la fecha dentro de 3 días
+        List<Appointment> appointmentList = appointmentRepository.findAppointmentsWithinDateRange(currentDate, endDate);
+
+        // Verifico que la lista tenga un elemento
+        assertThat(appointmentList).hasSize(1);
+
+        // Verifico que el turno sea el correcto
+        assertThat(appointmentList.get(0).getId()).isEqualTo(appointment.getId());
+        assertThat(appointmentList.get(0).getDate().getTime()).isEqualTo(appointment.getDate().getTime());
+        assertThat(appointmentList.get(0).getDescription()).isEqualTo(appointment.getDescription());
+        assertThat(appointmentList.get(0).getDuration()).isEqualTo(appointment.getDuration());
+        assertThat(appointmentList.get(0).getStatus()).isEqualTo(appointment.getStatus());
+        assertThat(appointmentList.get(0).getPatient().getId()).isEqualTo(appointment.getPatient().getId());
     }
 }
