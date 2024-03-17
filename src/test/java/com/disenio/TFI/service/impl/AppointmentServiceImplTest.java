@@ -1,6 +1,8 @@
 package com.disenio.TFI.service.impl;
 
+import com.disenio.TFI.exception.InvalidAppointmentDurationException;
 import com.disenio.TFI.exception.InvalidDateException;
+import com.disenio.TFI.exception.InvalidNumberOfDaysException;
 import com.disenio.TFI.exception.PatientNotFoundException;
 import com.disenio.TFI.model.Appointment;
 import com.disenio.TFI.model.AppointmentData;
@@ -12,8 +14,11 @@ import com.disenio.TFI.service.AppointmentService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
@@ -22,7 +27,91 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class AppointmentServiceImplTest {
+
+    @Mock
+    private AppointmentRepository appointmentRepository;
+    @InjectMocks
+    private AppointmentServiceImpl appointmentService;
+
+    /*private Date currentDate, appointmentDate, endDate;
+    private Appointment appointment;
+    @BeforeEach
+    void setUp() {
+        // Establezco la fecha actual como 11/03/2024 a las 09:00
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024, Calendar.MARCH, 11, 9, 0, 0);
+        currentDate = calendar.getTime();
+
+        // Obtengo la primera fecha del día siguiente a la fecha actual
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        appointmentDate = calendar.getTime();
+
+        // Obtengo la fecha dentro de 2 días
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        endDate = calendar.getTime();
+
+        // Creo un paciente
+        Patient patient = new Patient();
+        patient.setId(1L);
+
+        // Creo un turno
+        appointment = new Appointment(1L, appointmentDate, "Consulta", 30, AppointmentStatus.PENDING, patient);
+    }
+
+    @AfterEach
+    void tearDown() {
+        appointment = null;
+    }*/
+
+    @Test
+    void testGetAvailableDatesWhenDaysIsLowerThan1() {
+        int days = 0;
+        int duration = 30;
+
+        // Verifica que se lance la excepción InvalidNumberOfDaysException
+        InvalidNumberOfDaysException exception =  assertThrows(InvalidNumberOfDaysException.class, () -> {
+            appointmentService.getAvailableDates(duration, days);
+        });
+
+        // Verifica que el mensaje de la excepción sea el esperado
+        assertThat(exception.getMessage()).isEqualTo("El rango de días debe ser entre 1 y 180");
+    }
+
+    @Test
+    void testGetAvailableDatesWhenDaysIsGreaterThan180() {
+        int days = 181;
+        int duration = 30;
+
+        // Verifica que se lance la excepción InvalidNumberOfDaysException
+        InvalidNumberOfDaysException exception =  assertThrows(InvalidNumberOfDaysException.class, () -> {
+            appointmentService.getAvailableDates(duration, days);
+        });
+
+        // Verifica que el mensaje de la excepción sea el esperado
+        assertThat(exception.getMessage()).isEqualTo("El rango de días debe ser entre 1 y 180");
+    }
+
+    @Test
+    void testGetAvailableDatesWhenDurationIsInvalid() {
+        int days = 30;
+        int duration = 29;
+
+        // Verifica que se lance la excepción InvalidAppointmentDurationException
+        InvalidAppointmentDurationException exception =  assertThrows(InvalidAppointmentDurationException.class, () -> {
+            appointmentService.getAvailableDates(duration, days);
+        });
+
+        // Verifica que el mensaje de la excepción sea el esperado
+        assertThat(exception.getMessage()).isEqualTo("La duración debe ser múltiplo de 15 e igual o mayor a 15");
+    }
+    /*
     @Mock
     private AppointmentRepository appointmentRepository;
     @Mock
@@ -58,7 +147,6 @@ class AppointmentServiceImplTest {
     void tearDown() throws Exception {
         autoCloseable.close();
     }
-    /*
     @Test
     void testGetAvailableDates() {
         mock(Appointment.class);

@@ -26,16 +26,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         this.patientRepository = patientRepository;
     }
 
-    /*
-    @Override
-    public List<Date> getAvailableDates() {
-        // Obtengo los turnos proximos
-        Date currentDate = new Date();
-        List<Appointment> appointmentsList = appointmentRepository.findByDateGreaterThanEqual(currentDate);
-        // Calculo y retorno las fechas disponibles
-        return calculateAvailableDates(appointmentsList);
-    }
-    */
     @Override
     public List<Date> getAvailableDates(int duration, int days) throws InvalidNumberOfDaysException, InvalidAppointmentDurationException {
         // Valido que el número de días sea válido
@@ -47,7 +37,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         // Obtengo la fecha actual
         Calendar calendar = Calendar.getInstance();
-        Date currentDate = new Date();
+        Date currentDate = calendar.getTime();
 
         // Obtengo la fecha limite
         calendar.setTime(currentDate);
