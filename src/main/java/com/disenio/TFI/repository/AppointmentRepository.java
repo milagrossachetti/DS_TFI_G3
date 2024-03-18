@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
@@ -15,5 +14,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findAppointmentsWithinDateRange(Date currentDate, Date endDate);
 
     @Query("SELECT a FROM Appointment a WHERE a.date <= :date ORDER BY a.date DESC LIMIT 1")
-    Appointment findMostRecentAppointmentToDate(Date date);
+    Appointment findClosestAppointmentBeforeDate(Date date);
 }

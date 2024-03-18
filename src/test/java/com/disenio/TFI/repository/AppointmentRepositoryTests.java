@@ -91,4 +91,24 @@ public class AppointmentRepositoryTests {
         assertThat(appointmentList.get(0).getStatus()).isEqualTo(appointment.getStatus());
         assertThat(appointmentList.get(0).getPatient().getId()).isEqualTo(appointment.getPatient().getId());
     }
+
+    @Test
+    void testFindClosestAppointmentBeforeDate() {
+        // Obtengo la fecha un día después a la fecha del turno
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, 3);
+        Date date = calendar.getTime();
+
+        // Obtengo el turno más cercano antes de la fecha dentro de 3 días
+        Appointment closestAppointment = appointmentRepository.findClosestAppointmentBeforeDate(date);
+
+        // Verifico que el turno sea el correcto
+        assertThat(closestAppointment.getId()).isEqualTo(appointment.getId());
+        assertThat(closestAppointment.getDate().getTime()).isEqualTo(appointment.getDate().getTime());
+        assertThat(closestAppointment.getDescription()).isEqualTo(appointment.getDescription());
+        assertThat(closestAppointment.getDuration()).isEqualTo(appointment.getDuration());
+        assertThat(closestAppointment.getStatus()).isEqualTo(appointment.getStatus());
+        assertThat(closestAppointment.getPatient().getId()).isEqualTo(appointment.getPatient().getId());
+    }
 }

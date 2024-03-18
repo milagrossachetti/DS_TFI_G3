@@ -66,7 +66,7 @@ public class Appointment {
         }
 
         // Busco el último turno antes de la fecha ingresada y verifico que no se superponga con el turno a agendar
-        Appointment lastAppointment = appointmentRepository.findMostRecentAppointmentToDate(date);
+        Appointment lastAppointment = appointmentRepository.findClosestAppointmentBeforeDate(date);
         if (lastAppointment != null) {
             calendar.setTime(lastAppointment.getDate());
             calendar.add(Calendar.MINUTE, lastAppointment.getDuration());
@@ -150,16 +150,6 @@ public class Appointment {
                 availableDates.remove(date);
             }
         }
-        /*
-        List<Date> availableDatesAux = new ArrayList<>(availableDates);
-        for (Date date : availableDatesAux) {
-            calendar.setTime(date);
-            calendar.add(Calendar.MINUTE, (int) duration);
-            if (!availableDates.contains(calendar.getTime())) {
-                availableDates.remove(date);
-            }
-        }
-        */
         // Se retorna la lista de fechas disponibles
         return availableDates;
     }
