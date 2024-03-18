@@ -1,9 +1,12 @@
 package com.disenio.TFI.model;
 
 import com.disenio.TFI.repository.AppointmentRepository;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.*;
-import java.util.List;
+
 import java.util.Date;
 
 @Entity
@@ -12,8 +15,6 @@ import java.util.Date;
 @Getter @Setter @Builder
 public class Patient {
     @Id
-    // @GeneratedValue(strategy = GenerationType.AUTO)
-    // Comente la linea porque el id es el dni
     private Long id;
     private String name;
     private String mail;
@@ -25,15 +26,21 @@ public class Patient {
     private String phone;
 
     @Transient
+    @JsonIgnore
     private AppointmentRepository appointmentRepository;
 
+
     public Appointment scheduleAppointment(AppointmentData appointmentData) {
+        this.setId(appointmentData.getPatientId());
+
         // Creo el turno
         Appointment appointment = new Appointment();
         appointment.setDate(appointmentData.getDate());
         appointment.setDescription(appointmentData.getDescription());
+        appointment.setDuration(appointmentData.getDuration());
         appointment.setStatus(AppointmentStatus.PENDING);
         appointment.setPatient(this);
+
         // Agendo el turno
         return appointmentRepository.save(appointment);
     }

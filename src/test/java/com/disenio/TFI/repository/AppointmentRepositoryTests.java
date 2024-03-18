@@ -42,7 +42,7 @@ public class AppointmentRepositoryTests {
         patient.setId(1L);
 
         // Creo un turno
-        appointment = new Appointment(1L, appointmentDate, "Consulta", 30, AppointmentStatus.PENDING, patient);
+        appointment = new Appointment(1L, appointmentDate, "Consulta", 30, AppointmentStatus.PENDING, patient, appointmentRepository);
 
         // Guardo el turno
         appointmentRepository.save(appointment);

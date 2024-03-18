@@ -22,14 +22,14 @@ public class AppointmentController {
     AppointmentService appointmentService;
 
     @GetMapping("available-dates")
-    public List<Date> getAvailableDates(@RequestParam(name = "duration", required = true) int duration,
-                                        @RequestParam(name = "days", required = true) Integer days) throws InvalidNumberOfDaysException, InvalidAppointmentDurationException {
+    public List<Date> getAvailableDates(@RequestParam(name = "duration") int duration,
+                                        @RequestParam(name = "days") int days) throws InvalidNumberOfDaysException, InvalidAppointmentDurationException {
         return appointmentService.getAvailableDates(duration, days);
     }
 
 
     @PostMapping
-    public Appointment submitAppointmentDetails(@RequestBody AppointmentData appointmentData) throws PatientNotFoundException, InvalidDateException {
+    public Appointment submitAppointmentDetails(@RequestBody AppointmentData appointmentData) throws PatientNotFoundException, InvalidDateException, InvalidAppointmentDurationException {
         return appointmentService.submitAppointmentDetails(appointmentData);
     }
 }
