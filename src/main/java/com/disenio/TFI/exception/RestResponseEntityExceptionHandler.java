@@ -66,4 +66,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
     }
+    @ExceptionHandler(PatientIsEmptyException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ErrorMessage> patientIsEmptyException(PatientIsEmptyException exception){
+        ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
+    @ExceptionHandler(PatientAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ErrorMessage> patientAlreadyExistsException(PatientAlreadyExistsException exception){
+        ErrorMessage message = new ErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+    }
 }
